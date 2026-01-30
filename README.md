@@ -17,7 +17,7 @@ Example usage
 	 task-cli update [ INDEX OF THE TASK ] "[ DESCRiPTION OF THE TASK ]"
 	 task-cli delete [ INDEX OF THE TASK ]
 	 task-cli mark-in-progress [ INDEX OF THE TASK ]
-	 task-cli mark-in-done [ INDEX OF THE TASK ]
+	 task-cli mark-done [ INDEX OF THE TASK ]
 	 task-cli list
 	 task-cli list [ SOME STATUS F.E 'todo', 'done', 'in progress' ]
 
