@@ -4,6 +4,7 @@
 #include "task/service/TaskService.hpp"
 #include <getopt.h>
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <ostream>
 #include <string>
@@ -30,9 +31,10 @@ void Application::run(int &argc, char *argv[]) {
 
         } else if (opt == "add" && argc == 3) {
 
-            int id = (*dao->buffer).empty()
-                         ? 1
-                         : (*dao->buffer)[dao->buffer->size() - 1].getId() + 1;
+            int id =
+                dao->getBuffer().empty()
+                    ? 1
+                    : dao->getBuffer()[dao->getBuffer().size() - 1].getId() + 1;
 
             std::string description = argv[2];
 
@@ -44,29 +46,49 @@ void Application::run(int &argc, char *argv[]) {
             cliHelper.list(status);
 
         } else if (opt == "update" && argc == 4) {
-            int id = std::stoi(argv[2]);
-            std::string desc = argv[3];
+            try {
+                int id = std::stoi(argv[2]);
+                std::string desc = argv[3];
 
-            cliHelper.update(id, desc);
+                cliHelper.update(id, desc);
 
+            } catch (const std::invalid_argument &ex) {
+                std::cerr << RED << "Invalid argument type!" << RESET
+                          << std::endl;
+            }
         } else if (opt == "delete" && argc == 3) {
 
-            int id = std::stoi(argv[2]);
+            try {
+                int id = std::stoi(argv[2]);
 
-            cliHelper.remove(id);
-
+                cliHelper.remove(id);
+            } catch (const std::invalid_argument &ex) {
+                std::cerr << RED << "Invalid argument type!" << RESET
+                          << std::endl;
+            }
         } else if (opt == "mark-in-progress" && argc == 3) {
 
-            int id = std::stoi(argv[2]);
+            try {
+                int id = std::stoi(argv[2]);
 
-            cliHelper.markInProgress(id);
+                cliHelper.markInProgress(id);
+
+            } catch (const std::invalid_argument &ex) {
+                std::cerr << RED << "Invalid argument type!" << RESET
+                          << std::endl;
+            }
 
         } else if (opt == "mark-done" && argc == 3) {
 
-            int id = std::stoi(argv[2]);
+            try {
+                int id = std::stoi(argv[2]);
 
-            cliHelper.markDone(id);
+                cliHelper.markDone(id);
 
+            } catch (const std::invalid_argument &ex) {
+                std::cerr << RED << "Invalid argument type!" << RESET
+                          << std::endl;
+            }
         } else {
             std::cout << YELLOW
                       << "To see available options please use 'task-cli help'"

@@ -43,7 +43,6 @@ void Task::setUpdatedAt(std::time_t &updatedAt) {
     std::tm *upd = std::localtime(&updatedAt);
 
     this->updatedAt = utils.dateToString(upd);
-    delete upd;
 }
 void Task::setUpdatedAt(std::string &updatedAt) {
     if (!updatedAt.empty()) {

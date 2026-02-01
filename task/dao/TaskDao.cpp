@@ -1,17 +1,16 @@
 #include "TaskDao.hpp"
+#include "../Task.hpp"
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
 
-std::unique_ptr<std::ifstream> TaskDao::in = std::make_unique<std::ifstream>();
-std::unique_ptr<std::ofstream> TaskDao::out = std::make_unique<std::ofstream>();
-
-const std::unique_ptr<std::vector<Task>> TaskDao::buffer =
-    std::make_unique<std::vector<Task>>();
-
 TaskDao::TaskDao(std::string &&destionation) {
+    in = std::make_unique<std::ifstream>();
+    out = std::make_unique<std::ofstream>();
+    buffer = std::make_unique<std::vector<Task>>();
     in->open(destionation);
     if (!in->is_open()) {
         throw("Invalid file destination '" + destionation +
@@ -23,8 +22,6 @@ TaskDao::TaskDao(std::string &&destionation) {
 }
 
 TaskDao::~TaskDao() {
-    write();
-
     in->close();
     out->close();
 }
@@ -39,7 +36,7 @@ void TaskDao::read() {
             std::vector<std::string> temp;
             Task task;
 
-            while (std::getline(sl, cell, ',')) {
+            while (std::getline(sl, cell, '|')) {
                 temp.push_back(cell);
             }
 
@@ -63,11 +60,14 @@ void TaskDao::read() {
 void TaskDao::write() const {
     if (out->is_open()) {
         for (size_t i = 0; i < buffer->size(); i++) {
-            (*out) << std::to_string((*buffer)[i].getId()) << ","
-                   << (*buffer)[i].getDescription() << ","
-                   << (*buffer)[i].getStatus() << ","
-                   << (*buffer)[i].getCreatedAt() << ","
+            (*out) << std::to_string((*buffer)[i].getId()) << '|'
+                   << (*buffer)[i].getDescription() << '|'
+                   << (*buffer)[i].getStatus() << '|'
+                   << (*buffer)[i].getCreatedAt() << '|'
                    << (*buffer)[i].getUpdatedAt() << std::endl;
         }
     }
 }
+
+const std::vector<Task> &TaskDao::getBuffer() const { return (*buffer); }
+void TaskDao::add(const Task &task) { buffer->push_back(task); }

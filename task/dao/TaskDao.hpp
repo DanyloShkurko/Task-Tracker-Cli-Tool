@@ -8,16 +8,17 @@
 
 class TaskDao {
   private:
-    static std::unique_ptr<std::ifstream> in;
-    static std::unique_ptr<std::ofstream> out;
-
-    void write() const;
+    std::unique_ptr<std::ifstream> in;
+    std::unique_ptr<std::ofstream> out;
+    std::unique_ptr<std::vector<Task>> buffer;
 
   public:
-    const static std::unique_ptr<std::vector<Task>> buffer;
     TaskDao() = default;
     TaskDao(std::string &&destionation);
     ~TaskDao();
 
+    const std::vector<Task> &getBuffer() const;
+    void add(const Task &task);
+    void write() const;
     void read();
 };
